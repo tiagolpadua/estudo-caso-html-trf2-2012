@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Estudo de Caso TRF2</title>
+</head>
+<body>
+<h1>Exemplo de requisição AJAX automática com mutação de DOM</h1>
+<div id="data"></div>
+<script>
+setInterval(atualizarPagina, 5000);
+
+function atualizarPagina() {
+    var id = Math.floor(Math.random() * 6) + 100; 
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var xmlDoc = xhttp.responseXML; 
+            console.log(xmlDoc.getElementsByTagName("Title")[0].childNodes[0].nodeValue);
+            var html = "<ul>";
+            html +=  "<li>Título: " + xmlDoc.getElementsByTagName("Title")[0].childNodes[0]
+                .nodeValue + "</li>";
+            html +=  "<li>Data Publicação: " + xmlDoc.getElementsByTagName("PublishDate")[0]
+                .childNodes[0].nodeValue + "</li>";
+            html += "<ul>";
+            document.getElementById("data").innerHTML = html        
+        }
+    };
+    xhttp.open("GET", "https://fakerestapi.azurewebsites.net/api/Books/" + id, true);
+    xhttp.setRequestHeader("Accept", "application/xml");
+    xhttp.send();
+}
+</script>
+</body>
+</html>
